@@ -26,7 +26,8 @@ export class CreateObras1624488487100 implements MigrationInterface {
           },
           {
             name: 'authors',
-            type: 'varchar[]'
+            type: 'varchar',
+            isArray: true
           }
         ]
       })
