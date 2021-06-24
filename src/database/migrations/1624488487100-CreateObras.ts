@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class CreateObras1624488487100 implements MigrationInterface {
 
@@ -28,6 +28,16 @@ export class CreateObras1624488487100 implements MigrationInterface {
             name: 'authors',
             type: 'varchar',
             isArray: true
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()'
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()'
           }
         ]
       })
