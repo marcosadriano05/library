@@ -9,27 +9,23 @@ interface IObraRequest {
 }
 
 class ObraService {
+  private obraRepository = getCustomRepository(ObraRepository)
+
   async create ({ title, publisher, photo, authors }: IObraRequest) {
-    const obraRepository = getCustomRepository(ObraRepository)
+    const obra = this.obraRepository.create({ title, publisher, photo, authors })
 
-    const obra = obraRepository.create({ title, publisher, photo, authors })
-
-    await obraRepository.save(obra)
+    await this.obraRepository.save(obra)
 
     return obra
   }
 
   async fetchAll () {
-    const obraRepository = getCustomRepository(ObraRepository)
-
-    const obra = await obraRepository.find()
+    const obra = await this.obraRepository.find()
 
     return obra
   }
 
   async edit (id: string, { title, publisher, photo, authors }: IObraRequest) {
-    const obraRepository = getCustomRepository(ObraRepository)
-
     let partialEntity = {}
 
     if (title) partialEntity = { ...partialEntity, title }
@@ -37,11 +33,17 @@ class ObraService {
     if (photo) partialEntity = { ...partialEntity, photo }
     if (authors) partialEntity = { ...partialEntity, authors }
 
-    await obraRepository.update(id, partialEntity)
+    await this.obraRepository.update(id, partialEntity)
     
-    const obra = await obraRepository.findOne(id)
+    const obra = await this.obraRepository.findOne(id)
 
     return obra
+  }
+
+  async delete (id: string) {
+    const deleteResult = await this.obraRepository.delete(id)
+
+    return deleteResult
   }
 }
 
