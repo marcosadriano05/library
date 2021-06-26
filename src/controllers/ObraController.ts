@@ -20,6 +20,17 @@ class ObraController {
 
     res.status(200).json(obra)
   }
+
+  async edit (req: Request, res: Response) {
+    const { id } = req.params
+    const { title, publisher, photo, authors } = req.body
+
+    const obraService = new ObraService()
+
+    const newObra = await obraService.edit(id, { title, publisher, photo, authors })
+
+    res.status(200).json(newObra)
+  }
 }
 
 export { ObraController }
