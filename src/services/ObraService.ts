@@ -12,9 +12,34 @@ class ObraService {
   private obraRepository = getCustomRepository(ObraRepository)
 
   async create ({ title, publisher, photo, authors }: IObraRequest) {
+    if (!title || !publisher || !photo || !authors) {
+      throw new Error("Missing params")
+    }
+
+    const isParamsStrings = typeof title === 'string' 
+      && typeof publisher === 'string' 
+      && typeof photo === 'string'
+
+    if (!isParamsStrings) {
+      throw new Error("Params must be type string")
+    }
+
+    const isAuthorsStringArray = Array.isArray(authors) 
+      && authors.every(author => typeof author === 'string')
+    
+    if (!isAuthorsStringArray) {
+      throw new Error("Params must be type string")
+    }
+
     const obra = this.obraRepository.create({ title, publisher, photo, authors })
 
     await this.obraRepository.save(obra)
+
+    const addedObra = await this.obraRepository.findOne({ title })
+
+    if (!addedObra) {
+      throw new Error("Error to save in database")
+    }
 
     return obra
   }
