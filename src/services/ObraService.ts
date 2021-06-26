@@ -18,6 +18,14 @@ class ObraService {
 
     return obra
   }
+
+  async fetchAll () {
+    const obraRepository = getCustomRepository(ObraRepository)
+
+    const obra = await obraRepository.find()
+
+    return obra
+  }
 }
 
 export { ObraService }

@@ -5,6 +5,7 @@ const route = Router()
 
 const obraController = new ObraController()
 
-route.post('/obras', obraController.handle)
+route.post('/obras', obraController.add)
+route.get('/obras', obraController.fetchAll)
 
 export { route }
