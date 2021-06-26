@@ -31,6 +31,16 @@ class ObraController {
 
     res.status(200).json(newObra)
   }
+
+  async delete (req: Request, res: Response) {
+    const { id } = req.params
+
+    const obraService = new ObraService()
+
+    const deleteResult = await obraService.delete(id)
+
+    res.status(200).json(deleteResult)
+  }
 }
 
 export { ObraController }
