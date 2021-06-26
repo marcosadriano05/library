@@ -44,13 +44,17 @@ class ObraController {
   }
 
   async delete (req: Request, res: Response) {
-    const { id } = req.params
-
-    const obraService = new ObraService()
-
-    const deleteResult = await obraService.delete(id)
-
-    res.status(200).json(deleteResult)
+    try {
+      const { id } = req.params
+  
+      const obraService = new ObraService()
+  
+      const result = await obraService.delete(id)
+  
+      res.status(200).json(result)
+    } catch (error) {
+      res.status(400).json({ error: error.message })
+    }
   }
 }
 

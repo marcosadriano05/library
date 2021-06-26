@@ -55,6 +55,10 @@ class ObraService {
   }
 
   async edit (id: string, { title, publisher, photo, authors }: IObraRequest) {
+    if (!id) {
+      throw new Error("Missing route param")
+    }
+
     if (!title || !publisher || !photo || !authors) {
       throw new Error("Missing params")
     }
@@ -86,9 +90,15 @@ class ObraService {
   }
 
   async delete (id: string) {
-    const deleteResult = await this.obraRepository.delete(id)
+    const obra = await this.obraRepository.findOne(id)
 
-    return deleteResult
+    if (!obra) {
+      throw new Error("Invalid route param")
+    }
+
+    await this.obraRepository.delete(id)
+
+    return { message: "Successful request" }
   }
 }
 
