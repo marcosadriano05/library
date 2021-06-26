@@ -55,16 +55,32 @@ class ObraService {
   }
 
   async edit (id: string, { title, publisher, photo, authors }: IObraRequest) {
-    let partialEntity = {}
+    if (!title || !publisher || !photo || !authors) {
+      throw new Error("Missing params")
+    }
 
-    if (title) partialEntity = { ...partialEntity, title }
-    if (publisher) partialEntity = { ...partialEntity, publisher }
-    if (photo) partialEntity = { ...partialEntity, photo }
-    if (authors) partialEntity = { ...partialEntity, authors }
+    const isParamsStrings = typeof title === 'string' 
+      && typeof publisher === 'string' 
+      && typeof photo === 'string'
 
-    await this.obraRepository.update(id, partialEntity)
+    if (!isParamsStrings) {
+      throw new Error("Params must be type string")
+    }
+
+    const isAuthorsStringArray = Array.isArray(authors) 
+      && authors.every(author => typeof author === 'string')
+    
+    if (!isAuthorsStringArray) {
+      throw new Error("Params must be type string")
+    }
+
+    await this.obraRepository.update(id, { title, publisher, photo, authors })
     
     const obra = await this.obraRepository.findOne(id)
+
+    if (!obra) {
+      throw new Error("Error to update in database")
+    }
 
     return obra
   }
