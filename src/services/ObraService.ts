@@ -47,6 +47,10 @@ class ObraService {
   async fetchAll () {
     const obra = await this.obraRepository.find()
 
+    if (!obra) {
+      throw new Error("Error to fetch the data in database")
+    }
+
     return obra
   }
 

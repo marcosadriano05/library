@@ -17,11 +17,15 @@ class ObraController {
   }
 
   async fetchAll (req: Request, res: Response) {
-    const obraService = new ObraService()
-
-    const obra = await obraService.fetchAll()
-
-    res.status(200).json(obra)
+    try {
+      const obraService = new ObraService()
+  
+      const obra = await obraService.fetchAll()
+  
+      res.status(200).json(obra)
+    } catch (error) {
+      res.status(400).json({ error: error.message })
+    }
   }
 
   async edit (req: Request, res: Response) {
