@@ -52,13 +52,13 @@ yarn
 Em seguida é preciso executar todas as migrations para que o banco de dados seja criado/atualizado:
 
 ```shell
-npm run typeorm migration:run
+npm run run:migrations
 ```
 
 ou
 
 ```shell
-yarn typeorm migration:run
+yarn run:migrations
 ```
 
 Após isso, execute o comando para que a aplicação funcione em ambiente de desenvolvimento:
@@ -73,7 +73,35 @@ ou
 yarn dev
 ```
 
-A aplicação ainda não foi desenvolvida para ambiente de produção.
+Para a aplicação executar no ambiente de produção, é necessário criar a build do projeto:
+
+```shell
+npm run build
+```
+
+ou
+
+```shell
+yarn build
+```
+
+Após isso, é necessário atribuir o seguinte valor para a variável de ambiente:
+
+```shell
+NODE_ENV=production
+```
+
+E depois executar o comando de start:
+
+```shell
+npm run start
+```
+
+ou
+
+```shell
+yarn start
+```
 
 ## License
 
