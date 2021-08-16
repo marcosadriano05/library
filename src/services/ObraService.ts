@@ -28,7 +28,7 @@ class ObraService {
       && authors.every(author => typeof author === 'string')
     
     if (!isAuthorsStringArray) {
-      throw new Error("Params must be type string")
+      throw new Error("Params must be an array of type string")
     }
 
     const obra = this.obraRepository.create({ title, publisher, photo, authors })
