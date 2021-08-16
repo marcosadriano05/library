@@ -1,5 +1,5 @@
 import { Book } from '../entities/book'
 
-export interface FetchAllBook {
+export interface EditBook {
   exec: (id: string, book: Book) => Promise<Book>
 }

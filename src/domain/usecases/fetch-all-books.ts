@@ -1,5 +1,5 @@
 import { Book } from '../entities/book'
 
-export interface FetchAllBook {
+export interface FetchAllBooks {
   exec: () => Promise<Book[]>
 }
