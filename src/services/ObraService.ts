@@ -54,6 +54,16 @@ class ObraService {
     return obra
   }
 
+  async fetchOne (id: string) {
+    const obra = await this.obraRepository.findOne(id)
+
+    if (!obra) {
+      throw new Error("Error to fetch the data in database")
+    }
+
+    return obra
+  }
+
   async edit (id: string, { title, publisher, photo, authors }: IObraRequest) {
     if (!id) {
       throw new Error("Missing route param")

@@ -28,6 +28,19 @@ class ObraController {
     }
   }
 
+  async fetchOne (req: Request, res: Response) {
+    try {
+      const obraService = new ObraService()
+  
+      const { id } = req.params
+      const obra = await obraService.fetchOne(id)
+  
+      res.status(200).json(obra)
+    } catch (error) {
+      res.status(400).json({ error: error.message })
+    }
+  }
+
   async edit (req: Request, res: Response) {
     try {
       const { id } = req.params
