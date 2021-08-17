@@ -2,6 +2,8 @@ import { AddBook } from '../../domain/usecases'
 import { Book } from '../../domain/entities'
 import { AddBookRepository } from '../protocols/db'
 import { UuidGenerator } from '../protocols/uuid'
+import { MissingParamError } from '../errors'
+import { InvalidParamError } from '../errors'
 
 export class AddBookService implements AddBook {
   constructor (
@@ -10,26 +12,9 @@ export class AddBookService implements AddBook {
   ) {}
 
   async exec ({ title, publisher, photo, authors, description, price }: Book) {
-    if (!title || !publisher || !photo || !authors || !description || !price) {
-      throw new Error("Missing params")
-    }
+    this.checkIfParamsExists({ title, publisher, photo, authors, description, price })
 
-    const isParamsStrings = typeof title === 'string' 
-      && typeof publisher === 'string' 
-      && typeof photo === 'string'
-      && typeof description === 'string'
-      && typeof price === 'number'
-
-    if (!isParamsStrings) {
-      throw new Error("Incorrect params type")
-    }
-
-    const isAuthorsStringArray = Array.isArray(authors) 
-      && authors.every(author => typeof author === 'string')
-    
-    if (!isAuthorsStringArray) {
-      throw new Error("Params must be an array of type string")
-    }
+    this.checkParamsType({ title, publisher, photo, authors, description, price })
 
     const id: string = this.uuidGenerator.generate();
 
@@ -40,5 +25,33 @@ export class AddBookService implements AddBook {
     }
 
     return addedBook
+  }
+
+  private checkIfParamsExists({ 
+    title, publisher, photo, authors, description, price
+  }: Book): void {
+    if (!title) throw new MissingParamError('title')
+    if (!publisher) throw new MissingParamError('publisher')
+    if (!photo) throw new MissingParamError('photo')
+    if (!authors) throw new MissingParamError('authors')
+    if (!description) throw new MissingParamError('description')
+    if (!price) throw new MissingParamError('price')
+  }
+
+  private checkParamsType({ 
+    title, publisher, photo, authors, description, price
+  }: Book): void {
+    if (typeof title !== 'string') throw new InvalidParamError('title')
+    if (typeof publisher !== 'string') throw new InvalidParamError('publisher') 
+    if (typeof photo !== 'string') throw new InvalidParamError('photo')
+    if (typeof description !== 'string') throw new InvalidParamError('description')
+    if (typeof price !== 'number') throw new InvalidParamError('price')
+
+    const isAuthorsStringArray = Array.isArray(authors) 
+      && authors.every(author => typeof author === 'string')
+    
+    if (!isAuthorsStringArray) {
+      throw new InvalidParamError('authors')
+    }
   }
 }
