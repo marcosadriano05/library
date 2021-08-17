@@ -9,21 +9,23 @@ export class EditBookService implements EditBook {
     private fetchBookRepository: FetchBookRepository
   ) {}
 
-  async exec (id: string, { title, publisher, photo, authors }: Book) {
+  async exec (id: string, { title, publisher, photo, authors, description, price}: Book) {
     if (!id) {
       throw new Error("Missing route param")
     }
 
-    if (!title || !publisher || !photo || !authors) {
+    if (!title || !publisher || !photo || !authors || !description || !price) {
       throw new Error("Missing params")
     }
 
     const isParamsStrings = typeof title === 'string' 
       && typeof publisher === 'string' 
       && typeof photo === 'string'
+      && typeof description === 'string'
+      && typeof price === 'number'
 
     if (!isParamsStrings) {
-      throw new Error("Params must be type string")
+      throw new Error("Incorrect params type")
     }
 
     const isAuthorsStringArray = Array.isArray(authors) 
@@ -33,7 +35,7 @@ export class EditBookService implements EditBook {
       throw new Error("Params must be type string")
     }
 
-    await this.editBookRepository.edit(id, { title, publisher, photo, authors })
+    await this.editBookRepository.edit({id, title, publisher, photo, authors, description, price })
     
     const book = await this.fetchBookRepository.fetch(id)
 
