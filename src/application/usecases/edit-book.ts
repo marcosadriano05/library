@@ -35,12 +35,12 @@ export class EditBookService implements EditBook {
 
     await this.editBookRepository.edit(id, { title, publisher, photo, authors })
     
-    const obra = await this.fetchBookRepository.fetch(id)
+    const book = await this.fetchBookRepository.fetch(id)
 
-    if (!obra) {
+    if (!book) {
       throw new Error("Error to update in database")
     }
 
-    return obra
+    return book
   }
 }

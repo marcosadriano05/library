@@ -9,9 +9,9 @@ export class DeleteBookService implements DeleteBook {
   ) {}
 
   async exec (id: string) {
-    const obra = await this.fetchBookRepository.fetch(id)
+    const book = await this.fetchBookRepository.fetch(id)
 
-    if (!obra) {
+    if (!book) {
       throw new Error("Invalid route param")
     }
 
