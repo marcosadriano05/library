@@ -35,7 +35,7 @@ export class EditBookService implements EditBook {
       throw new Error("Params must be type string")
     }
 
-    await this.editBookRepository.edit({id, title, publisher, photo, authors, description, price })
+    await this.editBookRepository.edit({ id, title, publisher, photo, authors, description, price })
     
     const book = await this.fetchBookRepository.fetch(id)
 
