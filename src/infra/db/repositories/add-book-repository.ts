@@ -3,7 +3,7 @@ import { Book } from '../../../domain/entities'
 
 import { BookRepository } from './book-repository'
 
-export class AddBookRepositoryAdapter implements AddBookRepository {
+export class AddBookRepositoryImpl implements AddBookRepository {
   constructor (private bookRepository: BookRepository) {}
 
   async add(book: Book) {
