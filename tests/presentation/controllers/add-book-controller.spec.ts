@@ -1,7 +1,11 @@
 import { AddBookController } from '../../../src/presentation/controllers/add-book-controller'
-import { HttpRequest, HttpResponse } from '../../../src/presentation/http/http-interfaces'
+import { HttpRequest, HttpResponse } from '../../../src/presentation/protocols/http-interfaces'
 import { Book, AddBookParams } from '../../../src/domain/entities/book-entity'
 import { AddBookServiceInterface } from '../../../src/application/ports/add-book-service'
+import { MissingParamError } from '../../../src/presentation/errors/missing-param-error'
+import { InvalidParamError } from '../../../src/presentation/errors/invalid-param-error'
+import { ServerError } from '../../../src/presentation/errors/server-error'
+import { badRequest, serverError } from '../../../src/presentation/helpers/http-helper'
 
 const fakeHttpRequest = (): HttpRequest => ({
 	body: {
@@ -53,8 +57,7 @@ describe('Add Book Controller - Missing and falsy params provided', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		delete httpRequest.body.title
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Missing param title')
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('title')))
 	})
 
 	test('Should return status 400 if no description is provided', async () => {
@@ -62,8 +65,7 @@ describe('Add Book Controller - Missing and falsy params provided', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		delete httpRequest.body.description
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Missing param description')
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('description')))
 	})
 
 	test('Should return status 400 if no price is provided', async () => {
@@ -71,8 +73,7 @@ describe('Add Book Controller - Missing and falsy params provided', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		delete httpRequest.body.price
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Missing param price')
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('price')))
 	})
 
 	test('Should return status 400 if no publisher is provided', async () => {
@@ -80,8 +81,7 @@ describe('Add Book Controller - Missing and falsy params provided', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		delete httpRequest.body.publisher
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Missing param publisher')
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('publisher')))
 	})
 
 	test('Should return status 400 if no photo is provided', async () => {
@@ -89,8 +89,7 @@ describe('Add Book Controller - Missing and falsy params provided', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		delete httpRequest.body.photo
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Missing param photo')
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('photo')))
 	})
 
 	test('Should return status 400 if no authors is provided', async () => {
@@ -98,8 +97,7 @@ describe('Add Book Controller - Missing and falsy params provided', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		delete httpRequest.body.authors
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Missing param authors')
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('authors')))
 	})
 })
 
@@ -109,8 +107,7 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		httpRequest.body.title = 1
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param title')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('title')))
 	})
 
 	test('Should return status 400 if description type is not string', async () => {
@@ -118,8 +115,7 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		httpRequest.body.description = 1
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param description')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('description')))
 	})
 
 	test('Should return status 400 if price type is not number', async () => {
@@ -127,8 +123,7 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		httpRequest.body.price = '1'
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param price')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('price')))
 	})
 
 	test('Should return status 400 if publisher type is not string', async () => {
@@ -136,8 +131,7 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		httpRequest.body.publisher = 1
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param publisher')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('publisher')))
 	})
 
 	test('Should return status 400 if photo type is not string', async () => {
@@ -145,8 +139,7 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		const httpRequest: HttpRequest = fakeHttpRequest()
 		httpRequest.body.photo = 1
 		const httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param photo')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('photo')))
 	})
 
 	test('Should return status 400 if authors type is not an array of strings', async () => {
@@ -155,20 +148,16 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		let httpResponse: HttpResponse
 		httpRequest.body.authors = 1
 		httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param authors')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('authors')))
 		httpRequest.body.authors = [1, 2, 'any_author']
 		httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param authors')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('authors')))
 		httpRequest.body.authors = ['any_author', '', '']
 		httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param authors')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('authors')))
 		httpRequest.body.authors = []
 		httpResponse = await sut.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toBe('Invalid param authors')
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('authors')))
 	})
 })
 
@@ -184,8 +173,7 @@ describe('Add Book Controller - Integration with dependencies', () => {
 		const { sut, addBookService } = makeSut()
 		jest.spyOn(addBookService, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 		const httpResponse = await sut.handle(fakeHttpRequest())
-		expect(httpResponse.statusCode).toBe(500)
-		expect(httpResponse.body).toBe('Server error')
+		expect(httpResponse).toEqual(serverError(new Error()))
 	})
 })
 

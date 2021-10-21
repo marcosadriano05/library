@@ -1,7 +1,10 @@
-import { HttpRequest, HttpResponse} from '../http/http-interfaces'
+import { HttpRequest, HttpResponse} from '../protocols/http-interfaces'
 import { Controller } from '../protocols/controller'
 import { AddBookParams } from '../../domain/entities/book-entity'
 import { AddBookServiceInterface } from '../../application/ports/add-book-service'
+import { badRequest, created, serverError } from '../helpers/http-helper'
+import { MissingParamError } from '../errors/missing-param-error'
+import { InvalidParamError } from '../errors/invalid-param-error'
 
 export class AddBookController implements Controller {
 
@@ -12,37 +15,37 @@ export class AddBookController implements Controller {
       const requiredParams = ['title', 'description', 'price', 'publisher', 'photo', 'authors']
       for (const param of requiredParams) {
         if (!httpRequest.body[param]) {
-          return { statusCode: 400, body: `Missing param ${param}` }
+          return badRequest(new MissingParamError(param))
         }
       }
   
       const { title, description, price, publisher, photo, authors }: AddBookParams = httpRequest.body
       if (typeof title !== 'string') {
-        return { statusCode: 400, body: 'Invalid param title' }
+        return badRequest(new InvalidParamError('title'))
       }
       if (typeof description !== 'string') {
-        return { statusCode: 400, body: 'Invalid param description' }
+        return badRequest(new InvalidParamError('description'))
       }
       if (typeof price !== 'number') {
-        return { statusCode: 400, body: 'Invalid param price' }
+        return badRequest(new InvalidParamError('price'))
       }
       if (typeof publisher !== 'string') {
-        return { statusCode: 400, body: 'Invalid param publisher' }
+        return badRequest(new InvalidParamError('publisher'))
       }
       if (typeof photo !== 'string') {
-        return { statusCode: 400, body: 'Invalid param photo' }
+        return badRequest(new InvalidParamError('photo'))
       }
       if (!(authors instanceof Array) || authors.length === 0) {
-        return { statusCode: 400, body: 'Invalid param authors' }
+        return badRequest(new InvalidParamError('authors'))
       }
       if (authors.some(author => typeof author !== 'string' || !author)) {
-        return { statusCode: 400, body: 'Invalid param authors' }
+        return badRequest(new InvalidParamError('authors'))
       }
   
       const book = await this.addBookService.add(httpRequest.body)
-      return { statusCode: 201, body: book}
-    } catch (error) {
-      return { statusCode: 500, body: 'Server error' }
+      return created(book)
+    } catch (error: any) {
+      return serverError(error)
     }
 	}
 }

@@ -1,5 +1,5 @@
 import { Controller } from "../../presentation/protocols/controller";
-import { HttpRequest } from "../../presentation/http/http-interfaces";
+import { HttpRequest } from "../../presentation/protocols/http-interfaces";
 import { Request, Response } from 'express'
 
 export const expressAdapter = (controller: Controller) => {
