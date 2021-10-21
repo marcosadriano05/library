@@ -35,10 +35,10 @@ export class AddBookController implements Controller {
     if (typeof photo !== 'string') {
       return { statusCode: 400, body: 'Invalid param photo' }
     }
-    if (!(authors instanceof Array)) {
+    if (!(authors instanceof Array) || authors.length === 0) {
       return { statusCode: 400, body: 'Invalid param authors' }
     }
-    if (authors.some(author => typeof author !== 'string')) {
+    if (authors.some(author => typeof author !== 'string' || !author)) {
       return { statusCode: 400, body: 'Invalid param authors' }
     }
 		return new Promise(resolve => resolve({statusCode: 100, body: ''}))
