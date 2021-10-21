@@ -187,10 +187,12 @@ describe('Add Book Controller - Integration with dependencies', () => {
 		expect(httpResponse.statusCode).toBe(500)
 		expect(httpResponse.body).toBe('Server error')
 	})
+})
 
+describe('Add Book Controller - Success case', () => {
 	test('Should return status 201 if AddBookService.add succeeds', async () => {
 		const { sut, addBookService } = makeSut()
-		const addSpy = jest.spyOn(addBookService, 'add')
+		jest.spyOn(addBookService, 'add')
 		const httpResponse = await sut.handle(fakeHttpRequest())
 		expect(httpResponse.statusCode).toBe(201)
 		expect(httpResponse.body).toEqual(fakeBook())
