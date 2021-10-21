@@ -138,5 +138,13 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		httpResponse = await sut.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(400)
 		expect(httpResponse.body).toBe('Invalid param authors')
+		httpRequest.body.authors = ['any_author', '', '']
+		httpResponse = await sut.handle(httpRequest)
+		expect(httpResponse.statusCode).toBe(400)
+		expect(httpResponse.body).toBe('Invalid param authors')
+		httpRequest.body.authors = []
+		httpResponse = await sut.handle(httpRequest)
+		expect(httpResponse.statusCode).toBe(400)
+		expect(httpResponse.body).toBe('Invalid param authors')
 	})
 })
