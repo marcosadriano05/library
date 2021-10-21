@@ -1,8 +1,7 @@
-import { AddBookController } from '../../src/presentation/controllers/add-book-controller'
-import { HttpRequest, HttpResponse } from '../../src/presentation/http/http-interfaces'
-import { Controller } from '../../src/presentation/protocols/controller'
-import { Book, AddBookRequest } from '../../src/domain/entities/book-entity'
-import { AddBookServiceInterface } from '../../src/application/ports/add-book-service'
+import { AddBookController } from '../../../src/presentation/controllers/add-book-controller'
+import { HttpRequest, HttpResponse } from '../../../src/presentation/http/http-interfaces'
+import { Book, AddBookParams } from '../../../src/domain/entities/book-entity'
+import { AddBookServiceInterface } from '../../../src/application/ports/add-book-service'
 
 const fakeHttpRequest = (): HttpRequest => ({
 	body: {
@@ -27,7 +26,7 @@ const fakeBook = (): Book => ({
 
 const makeAddBookService = (): any => {
 	class AddBookServiceStub implements AddBookServiceInterface {
-		async add (addBookRquest: AddBookRequest): Promise<Book> {
+		async add (addBookParams: AddBookParams): Promise<Book> {
 			return new Promise(resolve => resolve(fakeBook()))
 		}
 	}
@@ -35,7 +34,7 @@ const makeAddBookService = (): any => {
 }
 
 interface SutTypes {
-	sut: Controller
+	sut: AddBookController
 	addBookService: AddBookServiceInterface
 }
 

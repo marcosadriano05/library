@@ -8,7 +8,7 @@ export interface Book {
   authors: Array<string>
 }
 
-export interface AddBookRequest {
+export interface AddBookParams {
   title: string
   description: string
   price: number

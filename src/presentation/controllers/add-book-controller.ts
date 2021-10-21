@@ -1,6 +1,6 @@
 import { HttpRequest, HttpResponse} from '../http/http-interfaces'
 import { Controller } from '../protocols/controller'
-import { AddBookRequest } from '../../domain/entities/book-entity'
+import { AddBookParams } from '../../domain/entities/book-entity'
 import { AddBookServiceInterface } from '../../application/ports/add-book-service'
 
 export class AddBookController implements Controller {
@@ -16,7 +16,7 @@ export class AddBookController implements Controller {
         }
       }
   
-      const { title, description, price, publisher, photo, authors }: AddBookRequest = httpRequest.body
+      const { title, description, price, publisher, photo, authors }: AddBookParams = httpRequest.body
       if (typeof title !== 'string') {
         return { statusCode: 400, body: 'Invalid param title' }
       }
