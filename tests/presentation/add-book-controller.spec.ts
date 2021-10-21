@@ -1,6 +1,8 @@
 import { AddBookController } from '../../src/presentation/controllers/add-book-controller'
 import { HttpRequest, HttpResponse } from '../../src/presentation/http/http-interfaces'
 import { Controller } from '../../src/presentation/protocols/controller'
+import { Book, AddBookRequest } from '../../src/domain/entities/book-entity'
+import { AddBookServiceInterface } from '../../src/application/ports/add-book-service'
 
 const fakeHttpRequest = (): HttpRequest => ({
 	body: {
@@ -13,14 +15,36 @@ const fakeHttpRequest = (): HttpRequest => ({
 	}
 })
 
+const fakeBook = (): Book => ({
+	id: 'any_id',
+	title: 'any_title',
+	description: 'any_description',
+	price: 100,
+	publisher: 'any_publisher',
+	photo: 'any_photo',
+	authors: ['any_author1', 'any_author2']
+})
+
+const makeAddBookService = (): any => {
+	class AddBookServiceStub implements AddBookServiceInterface {
+		async add (addBookRquest: AddBookRequest): Promise<Book> {
+			return new Promise(resolve => resolve(fakeBook()))
+		}
+	}
+	return new AddBookServiceStub()
+}
+
 interface SutTypes {
 	sut: Controller
+	addBookService: AddBookServiceInterface
 }
 
 const makeSut = (): SutTypes => {
-	const sut = new AddBookController()
+	const addBookService = makeAddBookService()
+	const sut = new AddBookController(addBookService)
 	return {
-		sut
+		sut,
+		addBookService
 	}
 }
 
@@ -146,5 +170,30 @@ describe('Add Book Controller - Params with incorrect types', () => {
 		httpResponse = await sut.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(400)
 		expect(httpResponse.body).toBe('Invalid param authors')
+	})
+})
+
+describe('Add Book Controller - Integration with dependencies', () => {
+	test('Should call AddBookService.add with correct params', async () => {
+		const { sut, addBookService } = makeSut()
+		const addSpy = jest.spyOn(addBookService, 'add')
+		await sut.handle(fakeHttpRequest())
+		expect(addSpy).toHaveBeenCalledWith(fakeHttpRequest().body)
+	})
+
+	test('Should return status 500 if AddBookService.add throws', async () => {
+		const { sut, addBookService } = makeSut()
+		jest.spyOn(addBookService, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+		const httpResponse = await sut.handle(fakeHttpRequest())
+		expect(httpResponse.statusCode).toBe(500)
+		expect(httpResponse.body).toBe('Server error')
+	})
+
+	test('Should return status 201 if AddBookService.add succeeds', async () => {
+		const { sut, addBookService } = makeSut()
+		const addSpy = jest.spyOn(addBookService, 'add')
+		const httpResponse = await sut.handle(fakeHttpRequest())
+		expect(httpResponse.statusCode).toBe(201)
+		expect(httpResponse.body).toEqual(fakeBook())
 	})
 })
