@@ -1,3 +1,5 @@
+import { Author } from "./author-entity";
+
 export interface Book {
 	id: string
 	title: string
@@ -5,7 +7,7 @@ export interface Book {
   price: number
   publisher: string
   photo: string
-  authors: Array<string>
+  authors: Array<Author>
 }
 
 export interface AddBookParams {

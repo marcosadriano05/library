@@ -4,8 +4,8 @@ import { Book, AddBookParams } from '../../../src/domain/entities/book-entity'
 import { AddBookServiceInterface } from '../../../src/application/ports/add-book-service'
 import { MissingParamError } from '../../../src/presentation/errors/missing-param-error'
 import { InvalidParamError } from '../../../src/presentation/errors/invalid-param-error'
-import { ServerError } from '../../../src/presentation/errors/server-error'
 import { badRequest, serverError } from '../../../src/presentation/helpers/http-helper'
+import { Author } from '../../../src/domain/entities/author-entity'
 
 const fakeHttpRequest = (): HttpRequest => ({
 	body: {
@@ -18,6 +18,11 @@ const fakeHttpRequest = (): HttpRequest => ({
 	}
 })
 
+const fakeAuthor = (): Author => ({
+  id: 'any_id',
+  name: 'any_author'
+})
+
 const fakeBook = (): Book => ({
 	id: 'any_id',
 	title: 'any_title',
@@ -25,7 +30,7 @@ const fakeBook = (): Book => ({
 	price: 100,
 	publisher: 'any_publisher',
 	photo: 'any_photo',
-	authors: ['any_author1', 'any_author2']
+	authors: [fakeAuthor()]
 })
 
 const makeAddBookService = (): any => {
