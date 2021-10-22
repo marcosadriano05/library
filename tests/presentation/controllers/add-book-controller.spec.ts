@@ -4,7 +4,7 @@ import { Book, AddBookParams } from '../../../src/domain/entities/book-entity'
 import { AddBookServiceInterface } from '../../../src/application/ports/add-book-service'
 import { MissingParamError } from '../../../src/presentation/errors/missing-param-error'
 import { InvalidParamError } from '../../../src/presentation/errors/invalid-param-error'
-import { badRequest, serverError } from '../../../src/presentation/helpers/http-helper'
+import { badRequest, created, serverError } from '../../../src/presentation/helpers/http-helper'
 import { Author } from '../../../src/domain/entities/author-entity'
 
 const fakeHttpRequest = (): HttpRequest => ({
@@ -187,7 +187,6 @@ describe('Add Book Controller - Success case', () => {
 		const { sut, addBookService } = makeSut()
 		jest.spyOn(addBookService, 'add')
 		const httpResponse = await sut.handle(fakeHttpRequest())
-		expect(httpResponse.statusCode).toBe(201)
-		expect(httpResponse.body).toEqual(fakeBook())
+		expect(httpResponse).toEqual(created(fakeBook()))
 	})
 })
