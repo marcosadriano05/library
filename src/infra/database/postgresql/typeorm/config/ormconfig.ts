@@ -1,16 +1,15 @@
-import dotenv from 'dotenv'
+import { env } from '../../../../../main/config/env'
 
-dotenv.config()
-
-const SOURCE_PATH = process.env.NODE_ENV === 'production' ? 'dist' : 'src'
+const SOURCE_PATH = env.nodeEnv === 'production' ? 'dist' : 'src'
 
 export = {
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE_NAME,
+  host: env.dbHost,
+  port: Number(env.dbPort),
+  username: env.dbUsername,
+  password: env.dbPassword,
+  database: env.dbDatabaseName,
+  synchronize: true,
   migrations: [`${SOURCE_PATH}/infra/database/postgresql/typeorm/migrations/**/*.{ts,js}`],
   entities: [`${SOURCE_PATH}/infra/database/postgresql/typeorm/entities/**/*.{ts,js}`],
   cli: {
