@@ -7,7 +7,9 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "dev": "ts-node-dev src/main/server.ts",
-    "run:migrations": "ts-node ./node_modules/typeorm/cli.js migration:run",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js --config src/infra/database/postgresql/typeorm/config/ormconfig.ts",
+    "migration:create": "npm run typeorm -- migration:create -n",
+    "migrations:run": "npm run typeorm -- migration:run",
     "test": "jest --passWithNoTests --runInBand --no-cache",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:staged": "npm test -- --findRelatedTests src/",
@@ -17,16 +19,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
-    "sqlite3": "^5.0.2",
     "typeorm": "^0.2.34",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.12",
     "@types/jest": "^27.0.2",
     "@types/node": "^15.12.4",
