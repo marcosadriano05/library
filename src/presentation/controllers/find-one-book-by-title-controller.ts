@@ -1,4 +1,4 @@
-import { FindOneBookByTitleRepositoryInterface } from "../../application/ports/find-book-repository";
+import { FindOneBookByTitleServiceInterface } from "../../application/ports/find-one-book-by-title-service";
 import { InvalidParamError } from "../errors/invalid-param-error";
 import { MissingParamError } from "../errors/missing-param-error";
 import { badRequest, ok, serverError } from "../helpers/http-helper";
@@ -6,7 +6,7 @@ import { Controller } from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http-interfaces";
 
 export class FindOneBookByTitleController implements Controller {
-  constructor (private readonly findOneBookByTitleRepository: FindOneBookByTitleRepositoryInterface) {}
+  constructor (private readonly findOneBookByTitleService: FindOneBookByTitleServiceInterface) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -22,7 +22,7 @@ export class FindOneBookByTitleController implements Controller {
         return badRequest(new InvalidParamError('title'))
       }
   
-      const book = await this.findOneBookByTitleRepository.findOneByTitle(title)
+      const book = await this.findOneBookByTitleService.findOneByTitle(title)
       return ok(book)
     } catch (error: any) {
       return serverError(error)
