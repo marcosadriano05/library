@@ -1,4 +1,4 @@
-import { FindOneBookByTitleServiceInterface } from "../../application/ports/find-one-book-by-title-service";
+import { FindOneBookByTitleServiceInterface } from "../../application/ports/find-book-service";
 import { InvalidParamError } from "../errors/invalid-param-error";
 import { MissingParamError } from "../errors/missing-param-error";
 import { badRequest, ok, serverError } from "../helpers/http-helper";

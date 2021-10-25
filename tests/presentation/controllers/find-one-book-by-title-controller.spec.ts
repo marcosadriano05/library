@@ -3,7 +3,7 @@ import { InvalidParamError } from '../../../src/presentation/errors/invalid-para
 import { MissingParamError } from '../../../src/presentation/errors/missing-param-error'
 import { badRequest, ok, serverError } from '../../../src/presentation/helpers/http-helper'
 import { HttpRequest } from '../../../src/presentation/protocols/http-interfaces'
-import { FindOneBookByTitleServiceInterface } from '../../../src/application/ports/find-one-book-by-title-service'
+import { FindOneBookByTitleServiceInterface } from '../../../src/application/ports/find-book-service'
 import { Book } from '../../../src/domain/entities/book-entity'
 import { Author } from '../../../src/domain/entities/author-entity'
 
