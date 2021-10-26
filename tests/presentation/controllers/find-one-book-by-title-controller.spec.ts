@@ -8,7 +8,7 @@ import { Book } from '../../../src/domain/entities/book-entity'
 import { Author } from '../../../src/domain/entities/author-entity'
 
 const fakeHttpRequest = () => ({
-	body: {
+	query: {
 		title: 'any_title'
 	}
 })
@@ -55,7 +55,7 @@ describe('Find One Book By Title Controller - Missing and falsy params provided'
   test('Should return status 400 if no title is provided', async () => {
 		const { sut } = makeSut()
 		const httpRequest: HttpRequest = fakeHttpRequest()
-		delete httpRequest.body.title
+		delete httpRequest.query.title
 		const httpResponse = await sut.handle(httpRequest)
 		expect(httpResponse).toEqual(badRequest(new MissingParamError('title')))
 	})
@@ -65,7 +65,7 @@ describe('Find One Book By Title Controller - Params with incorrect types', () =
   test('Should return status 400 if title type is not string', async () => {
 		const { sut } = makeSut()
 		const httpRequest: HttpRequest = fakeHttpRequest()
-		httpRequest.body.title = 1
+		httpRequest.query.title = 1
 		const httpResponse = await sut.handle(httpRequest)
 		expect(httpResponse).toEqual(badRequest(new InvalidParamError('title')))
 	})
@@ -76,7 +76,7 @@ describe('Find One Book By Title Controller - Integration with dependencies', ()
 		const { sut, findOneBookByTitleService } = makeSut()
 		const addSpy = jest.spyOn(findOneBookByTitleService, 'findOneByTitle')
 		await sut.handle(fakeHttpRequest())
-		expect(addSpy).toHaveBeenCalledWith(fakeHttpRequest().body.title)
+		expect(addSpy).toHaveBeenCalledWith(fakeHttpRequest().query.title)
 	})
 
   test('Should return status 500 if FindOneBookByTitleRepository.findOneByTitle throws', async () => {

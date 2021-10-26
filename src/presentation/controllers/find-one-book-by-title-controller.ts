@@ -12,12 +12,12 @@ export class FindOneBookByTitleController implements Controller {
     try {
       const requiredParams = ['title']
       for (const param of requiredParams) {
-        if (!httpRequest.body[param]) {
+        if (!httpRequest.query[param]) {
           return badRequest(new MissingParamError(param))
         }
       }
   
-      const { title } = httpRequest.body
+      const { title } = httpRequest.query
       if (typeof title !== 'string') {
         return badRequest(new InvalidParamError('title'))
       }
