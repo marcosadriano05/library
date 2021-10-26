@@ -1,5 +1,5 @@
 import { Express, Router } from 'express'
-import addBookRoute from '../routes/add-book-route'
+import addBookRoute from '../routes/book-routes'
 
 export default (app: Express) => {
   const router = Router()
