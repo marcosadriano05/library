@@ -95,9 +95,7 @@ describe('Add Book Service - Integration with dependencies', () => {
     const promise = sut.add(fakeAddBookServiceParams())
     expect(promise).rejects.toThrow()
   })
-})
 
-describe('Add Book Service - Success case', () => {
   test('Should do not call AddBookRepository.add if FindOneBookByTitleRepository.findOneByTitle return a book', async () => {
     const { sut, addBookRepository, findOneBookByTitleRepository } = makeSut()
     jest.spyOn(findOneBookByTitleRepository, 'findOneByTitle').mockReturnValueOnce(new Promise(resolve => resolve(fakeBook())))
@@ -113,7 +111,9 @@ describe('Add Book Service - Success case', () => {
     const promise = sut.add(fakeAddBookServiceParams())
     expect(promise).rejects.toThrow(new BookAlredyExistsError(fakeAddBookServiceParams().title))
   })
+})
 
+describe('Add Book Service - Success case', () => {
   test('Should return a book if AddBookRepository.add succeeds', async () => {
     const { sut, findOneBookByTitleRepository } = makeSut()
     jest.spyOn(findOneBookByTitleRepository, 'findOneByTitle').mockReturnValueOnce(new Promise(resolve => resolve(null)))
