@@ -7,7 +7,10 @@ export class DbFindBookPostgresRepository implements FindOneBookByTitleRepositor
   async findOneByTitle (title: string): Promise<Book | null> {
     const bookRepository = getCustomRepository(BookEntityRepository)
 
-    const existentBook = await bookRepository.findOne({ title })
+    const existentBook = await bookRepository.findOne({
+      relations: ['authors'],
+      where: { title }
+    })
 
     if (!existentBook) {
       return null
