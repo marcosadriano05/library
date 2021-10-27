@@ -1,4 +1,5 @@
 import { FindOneBookByTitleServiceInterface } from "../../application/ports/find-book-service";
+import { BookDto } from "../dtos/book-dto";
 import { InvalidParamError } from "../errors/invalid-param-error";
 import { MissingParamError } from "../errors/missing-param-error";
 import { badRequest, ok, serverError } from "../helpers/http-helper";
@@ -22,7 +23,8 @@ export class FindOneBookByTitleController implements Controller {
         return badRequest(new InvalidParamError('title'))
       }
   
-      const book = await this.findOneBookByTitleService.findOneByTitle(title)
+      const bookEntity = await this.findOneBookByTitleService.findOneByTitle(title)
+      const book = BookDto.build(bookEntity)
       return ok(book)
     } catch (error: any) {
       return serverError(error)
