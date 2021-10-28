@@ -48,9 +48,10 @@ const makeSut = (): SutTypes => {
 describe('Find One Book By Title Controller - Integration with dependencies', () => {
   test('Should call FindAllBooksService.find', async () => {
 		const { sut, findAllBooksService } = makeSut()
-		const addSpy = jest.spyOn(findAllBooksService, 'find')
+		const findSpy = jest.spyOn(findAllBooksService, 'find')
 		await sut.handle(fakeHttpRequest())
-		expect(addSpy).toHaveBeenCalledTimes(1)
+		expect(findSpy).toHaveBeenCalledTimes(1)
+		expect(findSpy).toHaveBeenCalledWith()
 	})
 
   test('Should return status 500 if FindAllBooksService.find throws', async () => {

@@ -74,9 +74,9 @@ describe('Find One Book By Title Controller - Params with incorrect types', () =
 describe('Find One Book By Title Controller - Integration with dependencies', () => {
   test('Should call FindOneBookByTitleService.findOneByTitle with correct params', async () => {
 		const { sut, findOneBookByTitleService } = makeSut()
-		const addSpy = jest.spyOn(findOneBookByTitleService, 'findOneByTitle')
+		const findOneByTitleSpy = jest.spyOn(findOneBookByTitleService, 'findOneByTitle')
 		await sut.handle(fakeHttpRequest())
-		expect(addSpy).toHaveBeenCalledWith(fakeHttpRequest().query.title)
+		expect(findOneByTitleSpy).toHaveBeenCalledWith(fakeHttpRequest().query.title)
 	})
 
   test('Should return status 500 if FindOneBookByTitleService.findOneByTitle throws', async () => {
