@@ -7,7 +7,7 @@ import { FindOneBookByTitleServiceInterface } from '../../../src/application/por
 import { Book } from '../../../src/domain/entities/book-entity'
 import { Author } from '../../../src/domain/entities/author-entity'
 
-const fakeHttpRequest = () => ({
+const fakeHttpRequest = (): HttpRequest => ({
 	query: {
 		title: 'any_title'
 	}
@@ -72,14 +72,14 @@ describe('Find One Book By Title Controller - Params with incorrect types', () =
 })
 
 describe('Find One Book By Title Controller - Integration with dependencies', () => {
-  test('Should call FindOneBookByTitleRepository.findOneByTitle with correct params', async () => {
+  test('Should call FindOneBookByTitleService.findOneByTitle with correct params', async () => {
 		const { sut, findOneBookByTitleService } = makeSut()
 		const addSpy = jest.spyOn(findOneBookByTitleService, 'findOneByTitle')
 		await sut.handle(fakeHttpRequest())
 		expect(addSpy).toHaveBeenCalledWith(fakeHttpRequest().query.title)
 	})
 
-  test('Should return status 500 if FindOneBookByTitleRepository.findOneByTitle throws', async () => {
+  test('Should return status 500 if FindOneBookByTitleService.findOneByTitle throws', async () => {
 		const { sut, findOneBookByTitleService } = makeSut()
 		jest.spyOn(findOneBookByTitleService, 'findOneByTitle').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 		const httpResponse = await sut.handle(fakeHttpRequest())
